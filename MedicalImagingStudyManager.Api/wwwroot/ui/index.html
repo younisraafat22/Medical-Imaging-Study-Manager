@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Medical Imaging Study Manager</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Radiology Workflow</p>
+      <h1>Medical Imaging Study Manager</h1>
+    </div>
+    <nav>
+      <a href="/swagger">Swagger</a>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="panel overview">
+      <div>
+        <span class="metric-label">Patients</span>
+        <strong id="patientCount">0</strong>
+      </div>
+      <div>
+        <span class="metric-label">Studies</span>
+        <strong id="studyCount">0</strong>
+      </div>
+      <div>
+        <span class="metric-label">Urgent</span>
+        <strong id="urgentCount">0</strong>
+      </div>
+      <div>
+        <span class="metric-label">Pending</span>
+        <strong id="pendingCount">0</strong>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <div class="column">
+        <section class="panel">
+          <div class="section-title">
+            <h2>Create Patient</h2>
+          </div>
+          <form id="patientForm" class="form-grid">
+            <label>
+              Full name
+              <input name="fullName" required maxlength="120" value="Nadia Meyer">
+            </label>
+            <label>
+              Date of birth
+              <input name="dateOfBirth" type="date" required value="1986-02-14">
+            </label>
+            <label>
+              Gender
+              <select name="gender">
+                <option>Female</option>
+                <option>Male</option>
+                <option>Other</option>
+                <option>Unknown</option>
+              </select>
+            </label>
+            <label>
+              Patient number
+              <input name="patientNumber" required maxlength="30" value="P-20010">
+            </label>
+            <button type="submit">Create Patient</button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="section-title">
+            <h2>Create Study</h2>
+          </div>
+          <form id="studyForm" class="form-grid">
+            <label>
+              Patient
+              <select name="patientId" id="studyPatient" required></select>
+            </label>
+            <label>
+              Modality
+              <select name="modality">
+                <option>CT</option>
+                <option>MRI</option>
+                <option>XRay</option>
+                <option>Ultrasound</option>
+                <option>Mammography</option>
+                <option>NuclearMedicine</option>
+              </select>
+            </label>
+            <label>
+              Study date
+              <input name="studyDate" type="datetime-local" required>
+            </label>
+            <label>
+              Body part
+              <input name="bodyPart" required maxlength="80" value="Chest">
+            </label>
+            <label>
+              Priority
+              <select name="priority">
+                <option>Routine</option>
+                <option>Urgent</option>
+              </select>
+            </label>
+            <button type="submit">Create Study</button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="section-title">
+            <h2>Create Report</h2>
+          </div>
+          <form id="reportForm" class="form-grid">
+            <label>
+              Study
+              <select name="studyId" id="reportStudy" required></select>
+            </label>
+            <label class="wide">
+              Findings
+              <textarea name="findings" required maxlength="4000">No acute cardiopulmonary abnormality.</textarea>
+            </label>
+            <label class="wide">
+              Impression
+              <textarea name="impression" required maxlength="2000">No acute findings.</textarea>
+            </label>
+            <button type="submit">Finalize Report</button>
+          </form>
+        </section>
+      </div>
+
+      <div class="column">
+        <section class="panel">
+          <div class="section-title">
+            <h2>Study Worklist</h2>
+          </div>
+          <form id="filterForm" class="filters">
+            <select name="modality">
+              <option value="">All modalities</option>
+              <option>CT</option>
+              <option>MRI</option>
+              <option>XRay</option>
+              <option>Ultrasound</option>
+              <option>Mammography</option>
+              <option>NuclearMedicine</option>
+            </select>
+            <select name="status">
+              <option value="">All statuses</option>
+              <option>Pending</option>
+              <option>InReview</option>
+              <option>Finalized</option>
+            </select>
+            <input name="date" type="date" aria-label="Study date">
+            <button type="submit">Apply</button>
+            <button type="button" id="clearFilters" class="secondary">Clear</button>
+          </form>
+          <div id="studyList" class="study-list"></div>
+        </section>
+
+        <section class="panel">
+          <div class="section-title">
+            <h2>Patients</h2>
+          </div>
+          <div id="patientList" class="compact-list"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js"></script>
+</body>
+</html>
