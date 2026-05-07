@@ -8,7 +8,7 @@ RUN dotnet restore
 
 COPY . .
 RUN dotnet test --configuration Release --no-restore
-RUN dotnet publish MedicalImagingStudyManager.Api/MedicalImagingStudyManager.Api.csproj --configuration Release --output /app/publish --no-restore
+RUN dotnet publish MedicalImagingStudyManager.Api/MedicalImagingStudyManager.Api.csproj --configuration Release --output /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app

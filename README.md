@@ -29,6 +29,7 @@ I built it as an API-first application, then added a simple dashboard UI so the 
 - xUnit
 - Docker
 - GitHub Actions
+- Fly.io deployment
 - Simple HTML, CSS, and JavaScript UI
 
 ## How To Run
@@ -57,6 +58,12 @@ http://localhost:5000/swagger
 ```
 
 If your terminal shows a different port, use that port instead.
+
+Live Fly.io version:
+
+```text
+https://medical-imaging-study-manager-younis.fly.dev/
+```
 
 ## Main API Endpoints
 
@@ -123,6 +130,61 @@ Then open:
 http://localhost:8080/
 ```
 
+## CI/CD And Fly.io
+
+The project has a GitHub Actions pipeline in:
+
+```text
+.github/workflows/ci-cd.yml
+```
+
+The pipeline does this:
+
+1. Restores NuGet packages
+2. Builds the solution
+3. Runs the tests
+4. Publishes the API as an artifact
+5. Deploys the app to Fly.io when code is pushed to `main`
+
+The Fly.io app config is in:
+
+```text
+fly.toml
+```
+
+The app name currently used is:
+
+```text
+medical-imaging-study-manager-younis
+```
+
+To make deployment work, the Fly.io app and volume must exist, and GitHub needs a secret called `FLY_API_TOKEN`.
+
+Basic Fly.io setup:
+
+```powershell
+flyctl auth login
+flyctl apps create medical-imaging-study-manager-younis
+flyctl volumes create medical_imaging_data --app medical-imaging-study-manager-younis --region fra --size 1
+flyctl auth token
+```
+
+Then add the token in GitHub:
+
+```text
+Repo -> Settings -> Secrets and variables -> Actions -> New repository secret
+Name: FLY_API_TOKEN
+Value: your Fly.io token
+```
+
+After that, every push to `main` should deploy to Fly.io.
+
+Current live app:
+
+```text
+https://medical-imaging-study-manager-younis.fly.dev/
+```
+
 ## What I Would Improve Next
 
 - Add login and roles
@@ -132,4 +194,3 @@ http://localhost:8080/
 - Add controller integration tests
 - Add DICOM upload support later
 - Replace SQLite with SQL Server for a more production-like setup
-

@@ -1,4 +1,4 @@
-name: Build and Test
+name: CI/CD
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
 
 jobs:
   build-test-publish:
+    name: Build, test, and publish
     runs-on: ubuntu-latest
 
     steps:
@@ -36,3 +37,22 @@ jobs:
         with:
           name: medical-imaging-study-manager-api
           path: publish
+
+  deploy-fly:
+    name: Deploy to Fly.io
+    needs: build-test-publish
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    concurrency: fly-production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

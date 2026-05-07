@@ -1,0 +1,9 @@
+**/bin/
+**/obj/
+**/TestResults/
+**/*.db
+**/*.db-shm
+**/*.db-wal
+.git/
+.github/
+LEARNING_README_LOCAL.md
